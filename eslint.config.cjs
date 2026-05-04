@@ -24,7 +24,6 @@ module.exports = [
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      ...tseslint.configs['recommended-requiring-type-checking'].rules,
       'no-undef': 'off',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
@@ -55,6 +54,9 @@ module.exports = [
         tsconfigRootDir: __dirname,
       },
     },
+    rules: {
+      ...tseslint.configs['recommended-requiring-type-checking'].rules,
+    },
   },
   {
     files: ['servicios/servicio-usuario/**/*.ts'],
@@ -67,6 +69,9 @@ module.exports = [
         tsconfigRootDir: __dirname,
       },
     },
+    rules: {
+      ...tseslint.configs['recommended-requiring-type-checking'].rules,
+    },
   },
   {
     files: ['cliente/**/*.ts', 'cliente/**/*.tsx'],
@@ -78,6 +83,9 @@ module.exports = [
         project: ['./cliente/tsconfig.json'],
         tsconfigRootDir: __dirname,
       },
+    },
+    rules: {
+      ...tseslint.configs['recommended-requiring-type-checking'].rules,
     },
   },
 ];

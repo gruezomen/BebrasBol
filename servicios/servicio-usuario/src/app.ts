@@ -3,13 +3,31 @@
  * Inicialización minimalista de middleware y rutas
  */
 
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { type Application, type NextFunction, type Request, type Response } from 'express';
 
 interface ErrorNegocio extends Error {
   status?: number;
 }
 
-const app: Express = express();
+const app: Application = express();
+
+const notFoundHandler = (_req: Request, res: Response): void => {
+  res.status(404).json({
+    error: 'Ruta no encontrada',
+    status: 404,
+  });
+};
+
+const errorHandler = (err: ErrorNegocio, _req: Request, res: Response, _next: NextFunction): void => {
+  console.error('Error:', err);
+  const status = err.status ?? 500;
+  const message = err.message ?? 'Error interno del servidor';
+
+  res.status(status).json({
+    error: message,
+    status,
+  });
+};
 
 // Middleware básico
 app.use(express.json());
@@ -21,22 +39,9 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // Manejo de rutas no encontradas (404)
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({
-    error: 'Ruta no encontrada',
-    status: 404,
-  });
-});
+app.use(notFoundHandler);
 
 // Middleware de error básico
-app.use((err: ErrorNegocio, _req: Request, res: Response, _next: NextFunction) => {
-  console.error('Error:', err);
-  const status = err.status ?? 500;
-  const message = err.message ?? 'Error interno del servidor';
-  res.status(status).json({
-    error: message,
-    status,
-  });
-});
+app.use(errorHandler);
 
 export default app;

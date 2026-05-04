@@ -3,13 +3,14 @@
  * Inicialización minimalista de middleware y rutas
  */
 
+
 import express, { Express, Request, Response, NextFunction } from 'express';
 
 interface ErrorNegocio extends Error {
   status?: number;
 }
 
-const app = express() as Express;
+const app: Express = express();
 
 // Middleware básico
 app.use(express.json());

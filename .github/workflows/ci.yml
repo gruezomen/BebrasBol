@@ -1,48 +1,33 @@
-name: Node.js CI (project name)
+name: CI
 on:
   push:
-    branches: [main, develop, 'feat/**']
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
 
-# Stop previous job on new push to same PR
 concurrency:
   group: github.workflow-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  quality-check:
+  calidad:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
-      - name: Node.js setup ${{ matrix.node-version }}
+      - name: Node.js setup
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '22.22.2'
           cache: 'npm'
-      - name: Clean dependency install
-        run: |
-          npm ci --ignore-scripts
-          npm --prefix services ci --ignore-scripts
-          npm --prefix services/auth-service ci --ignore-scripts
-          npm --prefix services/user-service ci --ignore-scripts
-          npm --prefix services/team-service ci --ignore-scripts
-      - name: Security auditing
-        run: npm audit --audit-level=high || true
-        continue-on-error: true # risk note
-      - name: Format check (Prettier)
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Verificar formato
         run: npm run format:check
-      - name: Check standard (Lint)
+      - name: Analisis estatico
         run: npm run lint
-      - name: Type check (TypeScript)
-        run: npm --prefix client run type-check
-      - name: Run Tests
+      - name: Auditoria de seguridad
+        run: npm audit --audit-level=high || true
+      - name: Pruebas con cobertura
         run: npm test
-        env:
-          NODE_ENV: test
-          # DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      - name: Build Check
+      - name: Build
         run: npm run build

@@ -1,0 +1,18 @@
+{
+    "private":  true,
+    "devDependencies":  {
+                            "concurrently":  "^9.2.1"
+                        },
+    "name":  "bebras-bolivia-services",
+    "version":  "1.0.0",
+    "scripts":  {
+                    "lint":  "npm --prefix servicio-autenticacion run lint \u0026\u0026 npm --prefix servicio-usuario run lint",
+                    "dev:auth":  "npm --prefix servicio-autenticacion run dev",
+                    "format":  "npm --prefix servicio-autenticacion run format --if-present \u0026\u0026 npm --prefix servicio-usuario run format --if-present",
+                    "format:check":  "npm --prefix servicio-autenticacion run format:check --if-present \u0026\u0026 npm --prefix servicio-usuario run format:check --if-present",
+                    "build":  "npm --prefix servicio-autenticacion run build \u0026\u0026 npm --prefix servicio-usuario run build",
+                    "dev:user":  "npm --prefix servicio-usuario run dev",
+                    "dev":  "concurrently \"npm run dev:auth\" \"npm run dev:user\"",
+                    "test":  "npm --prefix servicio-autenticacion run test \u0026\u0026 npm --prefix servicio-usuario run test"
+                }
+}

@@ -3,33 +3,64 @@
 Monorepo para la plataforma colaborativa BebrasBolivia.
 
 Arquitectura actual:
-- Frontend: Next.js (`client`)
-- Backend: microservicios Node.js/Express (`services`)
+- Frontend: Next.js (`cliente`)
+- Backend: microservicios Node.js/Express (`servicios`)
 - Testing: Jest
 - Calidad: ESLint + Prettier + Husky
-
 
 ## Estructura actual
 
 ```text
 BebrasBolivia-Gen/
-|-- client/                     # Frontend Next.js
-|-- services/                   # Backend microservicios
-|   |-- auth-service/
-|   |-- user-service/
-|   `-- team-service/
-|-- .github/workflows/ci.yml    # CI (lint, test, build)
-|-- .husky/                     # Git hooks
+|-- cliente/                           # Frontend Next.js
+|   |-- src/
+|   |   |-- app/
+|   |   |-- modulos/
+|   |   |   `-- user/
+|   |   `-- compartido/
+|   `-- pruebas/
+|       |-- unitarias/
+|       |-- integracion/
+|       `-- extremo-a-extremo/
+|-- servicios/                         # Backend microservicios
+|   |-- servicio-autenticacion/
+|   |   |-- src/
+|   |   |   |-- config/
+|   |   |   |-- controladores/
+|   |   |   |-- dtos/
+|   |   |   |-- middlewares/
+|   |   |   |-- modelos/
+|   |   |   |-- repositorios/
+|   |   |   |-- rutas/
+|   |   |   `-- servicios/
+|   |   `-- pruebas/
+|   |       |-- unitarias/
+|   |       `-- integracion/
+|   `-- servicio-usuario/
+|       |-- src/
+|       |   |-- config/
+|       |   |-- controladores/
+|       |   |-- dtos/
+|       |   |-- middlewares/
+|       |   |-- modelos/
+|       |   |-- repositorios/
+|       |   |-- rutas/
+|       |   `-- servicios/
+|       `-- pruebas/
+|           |-- unitarias/
+|           `-- integracion/
+|-- .github/workflows/ci.yml          # CI (lint, test, build)
+|-- .husky/                           # Git hooks
 |-- docker-compose.yml
-|-- package.json                # Scripts raiz + workspaces
+|-- package.json                      # Scripts raiz + workspaces
 `-- README.MD
 ```
 
 ## Workspaces
 
 El monorepo usa npm workspaces en la raiz:
-- `services`
-- `client`
+- `servicios`
+- `cliente`
 
 ## Requisitos
 
@@ -56,30 +87,29 @@ npm run dev
 ```
 
 Esto ejecuta:
-- `services`: `auth-service`, `user-service`, `team-service` en paralelo
-- `client`: Next.js
+- `servicios`: `servicio-autenticacion`, `servicio-usuario` en paralelo
+- `cliente`: Next.js
 
 ### Levantar solo backend microservicios
 
 ```bash
-npm run dev --workspace=services
+npm run dev --workspace=servicios
 ```
 
 ### Levantar solo frontend
 
 ```bash
-npm run dev --workspace=client
+npm run dev --workspace=cliente
 ```
 
 ## Puertos por defecto
 
 Microservicios:
-- auth-service: `4101`
-- user-service: `4102`
-- team-service: `4103`
+- servicio-autenticacion: `4101`
+- servicio-usuario: `4102`
 
 Frontend:
-- client (Next.js): `3000` (por defecto)
+- cliente (Next.js): `3000` (por defecto)
 
 ## Scripts principales
 
@@ -91,19 +121,19 @@ npm run build
 npm test
 npm run lint
 npm run format
-npm run format:check
+npm run format && npm run lint && npm test
 ```
 
 Scripts utiles por workspace:
 
 ```bash
-npm run dev --workspace=services
-npm run build --workspace=services
-npm run test --workspace=services
+npm run dev --workspace=servicios
+npm run build --workspace=servicios
+npm run test --workspace=servicios
 
-npm run dev --workspace=client
-npm run build --workspace=client
-npm run test --workspace=client
+npm run dev --workspace=cliente
+npm run build --workspace=cliente
+npm run test --workspace=cliente
 ```
 
 ## Scripts por microservicio
@@ -111,12 +141,10 @@ npm run test --workspace=client
 Ejemplos:
 
 ```bash
-npm --prefix services/auth-service run dev
-npm --prefix services/user-service run dev
-npm --prefix services/team-service run dev
-
-npm --prefix services/auth-service run test:unit
-npm --prefix services/auth-service run test:integration
+npm --prefix servicios/servicio-autenticacion run dev
+npm --prefix servicios/servicio-usuario run dev
+npm --prefix servicios/servicio-autenticacion run test:unit
+npm --prefix servicios/servicio-autenticacion run test:integration
 ```
 
 ## Docker Compose
@@ -155,7 +183,7 @@ En push a `feat/*`, `develop` y `main`, y en PR hacia `main` o `develop`, ejecut
 1. Instalacion limpia
 2. Format check
 3. Lint
-4. Type-check (client)
+4. Type-check (cliente)
 5. Tests
 6. Build
 
@@ -183,7 +211,7 @@ Solucion rapida:
 
 ### El frontend no conecta a servicios
 
-Verifica en `client/.env`:
+Verifica en `cliente/.env`:
 - `NEXT_PUBLIC_AUTH_SERVICE_URL`
 - `NEXT_PUBLIC_USER_SERVICE_URL`
 - `NEXT_PUBLIC_TEAM_SERVICE_URL`

@@ -15,8 +15,8 @@ temp/
 *.tsbuildinfo
 
 # Monorepo specific
-server/dist/
-client/.next/
+servicios/dist/
+cliente/.next/
 
 # ------------------------------------------------------------
 # Test and coverage artifacts
@@ -62,6 +62,7 @@ lerna-debug.log*
 .turbo/
 .eslintcache
 .stylelintcache
+.next/
 
 # ------------------------------------------------------------
 # IDE and editor

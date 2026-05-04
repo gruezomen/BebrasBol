@@ -21,7 +21,7 @@ services:
     build:
       context: .
       # Define la ruta: MODELO BD Y REPOS
-      dockerfile: services/auth-service/Dockerfile 
+      dockerfile: servicios/servicio-autenticacion/Dockerfile 
     container_name: auth_svc
     volumes:
       - .:/usr/src/app

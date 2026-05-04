@@ -20,7 +20,7 @@ jobs:
           node-version: '22.22.2'
           cache: 'npm'
       - name: Instalar dependencias
-        run: npm ci
+        run: npm run install:all
       - name: Verificar formato
         run: npm run format:check
       - name: Analisis estatico

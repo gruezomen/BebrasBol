@@ -16,7 +16,7 @@
     "format:check": "npm run format:check --workspaces --if-present",
     "validate": "npm run format && npm run lint && npm test",
     "clean": "npm run clean --workspaces && rm -rf node_modules",
-    "install:all": "npm ci && npm --prefix servicios ci && npm --prefix servicios/servicio-autenticacion ci && npm --prefix servicios/servicio-usuario ci"
+    "install:all": "npm ci && npm --prefix servicios ci && npm --prefix servicios/servicio-usuario ci"
   },
   "engines": {
     "node": "22.22.2",

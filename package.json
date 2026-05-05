@@ -26,6 +26,7 @@
     "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.58.1",
     "@typescript-eslint/parser": "^8.58.1",
+    "commitlint": "17.8.1",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -34,10 +35,9 @@
     "jest": "^30.3.0",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.2",
+    "prisma": "^6.18.0",
     "ts-jest": "^29.4.5",
-    "typescript": "^6.0",
-    "commitlint": "^17.3.0",
-    "prisma": "^6.18.0"
+    "typescript": "^6.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

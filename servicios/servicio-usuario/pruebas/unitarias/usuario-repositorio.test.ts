@@ -24,4 +24,17 @@ describe('UsuarioRepositorio', () => {
     expect(findFirst).toHaveBeenCalledWith({ where: { correo: 'a@b.com' } });
     expect(resultado).toEqual({ correo: 'a@b.com' });
   });
+
+  it('deberia crear un usuario delegando en create', async () => {
+    const datos = { correo: 'nuevo@b.com', nombres: 'Ana' };
+    const create = jest.fn().mockResolvedValue({ id: 'u9', ...datos });
+    const repositorio = crearUsuarioRepositorio({
+      usuarios: { findUnique: jest.fn(), findFirst: jest.fn(), create },
+    } as never);
+
+    const resultado = await repositorio.crear(datos as never);
+
+    expect(create).toHaveBeenCalledWith({ data: datos });
+    expect(resultado).toEqual({ id: 'u9', ...datos });
+  });
 });

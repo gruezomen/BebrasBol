@@ -16,4 +16,8 @@ usuarioRutas.post('/', (req, res, next) => {
   void usuarioControlador.crear(req, res, next);
 });
 
+usuarioRutas.delete('/:id', (req, res, next) => {
+  void usuarioControlador.eliminar(req, res, next);
+});
+
 export default usuarioRutas;

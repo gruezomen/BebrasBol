@@ -42,6 +42,7 @@ interface DependenciasUsuarioServicio {
 
 interface UsuarioServicio {
   crear(dto: CrearUsuarioDto): Promise<usuarios>;
+  eliminarUsuario(idUsuario: string, idSolicitante: string): Promise<usuarios>;
 }
 
 export const crearUsuarioServicio = (
@@ -72,6 +73,26 @@ export const crearUsuarioServicio = (
         nombre_usuario: dto.nombreUsuario ?? null,
         telefono: dto.telefono ?? null,
       });
+    },
+
+    async eliminarUsuario(idUsuario: string, idSolicitante: string): Promise<usuarios> {
+      const solicitante = await repositorio.buscarPorId(idSolicitante);
+
+      if (!solicitante || solicitante.rol !== 'administrador') {
+        throw new ErrorNegocio('No tiene permisos para eliminar usuarios', 403);
+      }
+
+      const usuario = await repositorio.buscarPorId(idUsuario);
+
+      if (!usuario) {
+        throw new ErrorNegocio('Usuario no encontrado', 404);
+      }
+
+      if (!usuario.esta_activo) {
+        throw new ErrorNegocio('El usuario ya fue eliminado', 400);
+      }
+
+      return repositorio.eliminar(idUsuario);
     },
   };
 };

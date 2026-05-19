@@ -13,6 +13,7 @@ type UsuarioRepositorio = {
   buscarPorId(id: string): Promise<usuarios | null>;
   buscarPorCorreo(correo: string): Promise<usuarios | null>;
   crear(datos: DatosCrearUsuario): Promise<usuarios>;
+  eliminar(id: string): Promise<usuarios>;
 };
 
 export const crearUsuarioRepositorio = (conexionBD: ConexionBD): UsuarioRepositorio => ({
@@ -26,6 +27,13 @@ export const crearUsuarioRepositorio = (conexionBD: ConexionBD): UsuarioReposito
 
   async crear(datos: DatosCrearUsuario): Promise<usuarios> {
     return conexionBD.usuarios.create({ data: datos });
+  },
+
+  async eliminar(id: string): Promise<usuarios> {
+    return conexionBD.usuarios.update({
+      where: { id },
+      data: { esta_activo: false },
+    });
   },
 });
 

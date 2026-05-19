@@ -21,6 +21,7 @@ interface UsuarioPublico {
 
 interface UsuarioControlador {
   crear(req: Request, res: Response, next: NextFunction): Promise<void>;
+  eliminar(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 // Nunca se expone contrasena_hash al cliente (regla de seguridad del estandar).
@@ -50,6 +51,22 @@ export const crearUsuarioControlador = (
       const dto = validarCrearUsuario(req.body);
       const usuarioCreado = await servicio.crear(dto);
       res.status(201).json({ data: aRespuestaPublica(usuarioCreado) });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async eliminar(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const idSolicitante = req.headers['x-usuario-id'];
+
+      if (!idSolicitante || typeof idSolicitante !== 'string') {
+        res.status(400).json({ mensaje: 'Falta el identificador del solicitante' });
+        return;
+      }
+
+      await servicio.eliminarUsuario(req.params.id, idSolicitante);
+      res.status(200).json({ mensaje: 'Usuario eliminado correctamente' });
     } catch (error) {
       next(error);
     }

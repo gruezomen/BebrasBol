@@ -1,5 +1,6 @@
 import type { usuarios } from '@prisma/client';
 
+import type { ConsultaUsuariosQuery, PaginacionResponse } from '../dtos/consulta-usuarios.dto';
 import type { CrearUsuarioDto } from '../dtos/crear-usuario.dto';
 import {
   crearUsuarioRepositorio,
@@ -42,6 +43,10 @@ interface DependenciasUsuarioServicio {
 
 interface UsuarioServicio {
   crear(dto: CrearUsuarioDto): Promise<usuarios>;
+  listar(query: ConsultaUsuariosQuery): Promise<{
+    usuarios: usuarios[];
+    paginacion: PaginacionResponse;
+  }>;
 }
 
 export const crearUsuarioServicio = (
@@ -72,6 +77,27 @@ export const crearUsuarioServicio = (
         nombre_usuario: dto.nombreUsuario ?? null,
         telefono: dto.telefono ?? null,
       });
+    },
+
+    /**
+     * Lista usuarios con paginación y filtros (REQ-010)
+     */
+    async listar(query: ConsultaUsuariosQuery): Promise<{
+      usuarios: usuarios[];
+      paginacion: PaginacionResponse;
+    }> {
+      const { page = 1, limit = 10 } = query;
+      const { usuarios, total } = await repositorio.listar(query);
+      
+      return {
+        usuarios,
+        paginacion: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
     },
   };
 };

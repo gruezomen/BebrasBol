@@ -1,9 +1,9 @@
 import { rol_usuario } from '@prisma/client';
 
-import type { CambiarRolDto } from '../dtos/rol.dto.js';
-import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto.js';
-import type { RolRepositorio } from '../repositorios/rol-repositorio.js';
-import { ErrorNegocio } from '../utilidades/errores.js';
+import type { CambiarRolDto } from '../dtos/rol.dto';
+import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto';
+import type { RolRepositorio } from '../repositorios/rol-repositorio';
+import { ErrorNegocio } from '../utilidades/errores';
 
 export class RolServicio {
   constructor(private readonly rolRepositorio: RolRepositorio) {}

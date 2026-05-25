@@ -1,15 +1,15 @@
 import type { rol_usuario, usuarios } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 
-import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto.js';
-import type { CrearUsuarioDto } from '../dtos/crear-usuario.dto.js';
+import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto';
+import type { CrearUsuarioDto } from '../dtos/crear-usuario.dto';
 
 import { crearUsuarioServicio } from '../servicios/usuario-servicio';
 import { validarCrearUsuario } from '../utilidades/validar-crear-usuario';
 
-import { RolRepositorio } from '../repositorios/rol-repositorio.js';
-import { RolServicio } from '../servicios/rol-servicio.js';
-import baseDeDatos from '../config/base-de-datos.js';
+import { RolRepositorio } from '../repositorios/rol-repositorio';
+import { RolServicio } from '../servicios/rol-servicio';
+import baseDeDatos from '../config/base-de-datos';
 
 
 type UsuarioServicio = ReturnType<typeof crearUsuarioServicio>;

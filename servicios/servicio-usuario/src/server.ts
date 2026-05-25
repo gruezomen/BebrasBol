@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { manejadorErrorHttp } from './compartido/infraestructura/http/manejador-error-http';
 import rutasRol from './rutas/rol-rutas';
-import rutasUsuario from './rutas/usuario.rutas';
+import rutasUsuario from './rutas/usuario-rutas';
 
 const app = express();
 
@@ -23,5 +23,5 @@ app.use(manejadorErrorHttp);
 
 const PORT = process.env.USER_SERVICE_PORT || 4102;
 app.listen(PORT, () => {
-  console.warn(Servidor de usuarios corriendo en el puerto );
+  console.warn("Servidor de usuarios corriendo en el puerto");
 });

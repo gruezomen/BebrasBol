@@ -23,7 +23,9 @@ export class CargaMasivaControlador {
     try {
 
       const archivo =
-        (req as any).file;
+        (req as Request & {
+          file?: Express.Multer.File
+        }).file;
 
       if (!archivo) {
 

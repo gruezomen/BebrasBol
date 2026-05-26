@@ -54,7 +54,9 @@ export class CargaMasivaServicio {
     if (faltantes.length > 0) {
 
       return {
-        mensaje: 'Faltan columnas obligatorias',
+        mensaje:
+          'Faltan columnas obligatorias',
+
         faltantes,
       };
 
@@ -73,7 +75,12 @@ export class CargaMasivaServicio {
 
     for (
       const [index, fila]
-      of (datos as any[]).entries()
+      of (
+        datos as Record<
+          string,
+          unknown
+        >[]
+      ).entries()
     ) {
 
       const numeroFila = index + 2;
@@ -125,7 +132,9 @@ export class CargaMasivaServicio {
 
       if (
         !fila.contraseña ||
-        String(fila.contraseña).length < 6
+        String(
+          fila.contraseña,
+        ).length < 6
       ) {
 
         errores.push(
@@ -134,7 +143,8 @@ export class CargaMasivaServicio {
 
       }
 
-      const correo = String(fila.correo);
+      const correo =
+        String(fila.correo);
 
       if (correos.has(correo)) {
 
@@ -147,11 +157,13 @@ export class CargaMasivaServicio {
       correos.add(correo);
 
       const usuarioExistente =
-        await this.prisma.usuarios.findUnique({
-          where: {
-            correo,
-          },
-        });
+        await this.prisma
+          .usuarios
+          .findUnique({
+            where: {
+              correo,
+            },
+          });
 
       if (usuarioExistente) {
 
@@ -166,7 +178,9 @@ export class CargaMasivaServicio {
     if (errores.length > 0) {
 
       return {
-        mensaje: 'Errores encontrados',
+        mensaje:
+          'Errores encontrados',
+
         errores,
       };
 
@@ -174,31 +188,58 @@ export class CargaMasivaServicio {
 
     const usuariosGuardados = [];
 
-    for (const fila of datos as any[]) {
+    for (
+      const fila
+      of datos as Record<
+        string,
+        unknown
+      >[]
+    ) {
 
       try {
 
         const contrasenaHash =
           await bcrypt.hash(
-            String(fila.contraseña),
+            String(
+              fila.contraseña,
+            ),
             10,
           );
 
         const usuario =
-          await this.prisma.usuarios.create({
-            data: {
-              nombres: String(fila.nombres),
-              apellidos: String(fila.apellidos),
-              correo: String(fila.correo),
-              rol: String(fila.rol) as any,
-              contrasena_hash:
-                contrasenaHash,
-            },
-          });
+          await this.prisma
+            .usuarios
+            .create({
+              data: {
+                nombres: String(
+                  fila.nombres,
+                ),
+
+                apellidos: String(
+                  fila.apellidos,
+                ),
+
+                correo: String(
+                  fila.correo,
+                ),
+
+                rol: String(
+                  fila.rol,
+                ) as
+                  | 'administrador'
+                  | 'coordinador'
+                  | 'profesor'
+                  | 'estudiante',
+
+                contrasena_hash:
+                  contrasenaHash,
+              },
+            });
 
         usuariosGuardados.push({
           id: usuario.id,
-          correo: usuario.correo,
+          correo:
+            usuario.correo,
         });
 
       } catch {
@@ -215,14 +256,16 @@ export class CargaMasivaServicio {
       mensaje:
         'Usuarios registrados correctamente',
 
-      totalProcesados: datos.length,
+      totalProcesados:
+        datos.length,
 
       insertados:
         usuariosGuardados.length,
 
       errores,
 
-      usuarios: usuariosGuardados,
+      usuarios:
+        usuariosGuardados,
     };
 
   }

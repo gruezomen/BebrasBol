@@ -1,21 +1,16 @@
 import { Router } from 'express';
 import multer from 'multer';
 
-import { UsuarioControlador }
-from '../controladores/usuario.controlador';
-
 import { CargaMasivaControlador }
 from '../controladores/carga-masiva.controlador';
-
+import { UsuarioControlador }
+from '../controladores/usuario.controlador';
 import { verificarPermiso }
 from '../middlewares/autorizar';
-
 import { UsuarioRepositorioMock }
 from '../repositorios/usuario.repositorio.mock';
-
 import { UsuarioServicio }
 from '../servicios/usuario.servicio';
-
 import { Accion }
 from '../shared/permisos';
 

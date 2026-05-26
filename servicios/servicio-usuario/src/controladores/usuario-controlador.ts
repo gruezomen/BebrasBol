@@ -4,13 +4,11 @@ import type { NextFunction, Request, Response } from 'express';
 import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto';
 import type { CrearUsuarioDto } from '../dtos/crear-usuario.dto';
 
-import { crearUsuarioServicio } from '../servicios/usuario-servicio';
-import { validarCrearUsuario } from '../utilidades/validar-crear-usuario';
-
+import baseDeDatos from '../config/base-de-datos';
 import { RolRepositorio } from '../repositorios/rol-repositorio';
 import { RolServicio } from '../servicios/rol-servicio';
-import baseDeDatos from '../config/base-de-datos';
-
+import { crearUsuarioServicio } from '../servicios/usuario-servicio';
+import { validarCrearUsuario } from '../utilidades/validar-crear-usuario';
 
 type UsuarioServicio = ReturnType<typeof crearUsuarioServicio>;
 

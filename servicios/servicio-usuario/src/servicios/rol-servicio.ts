@@ -1,7 +1,7 @@
 import { rol_usuario } from '@prisma/client';
 
-import type { CambiarRolDto } from '../dtos/rol.dto';
 import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto';
+import type { CambiarRolDto } from '../dtos/rol.dto';
 import type { RolRepositorio } from '../repositorios/rol-repositorio';
 import { ErrorNegocio } from '../utilidades/errores';
 

@@ -1,8 +1,7 @@
 import cors from 'cors'; 
 import express from 'express';
 
-import rutasRol from './rutas/rol-rutas';
-import rutasUsuario from './rutas/usuario.rutas'; 
+import rutasRol from './rutas/rol-rutas'; 
 
 const app = express();
 
@@ -17,10 +16,8 @@ app.use(express.json()); // El que lee los body en JSON
 
 // ... aquí cargas tus rutas ...
 app.use('/api/v1/roles', rutasRol);
-app.use('/api/v1/usuarios', rutasUsuario);
 
 const PORT = process.env.USER_SERVICE_PORT || 4102;
 app.listen(PORT, () => {
-    console.warn(`Servidor de usuarios corriendo en el puerto ${PORT}`);
+    console.log(`Servidor de usuarios corriendo en el puerto ${PORT}`);
 });
-

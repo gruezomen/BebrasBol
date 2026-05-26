@@ -113,4 +113,12 @@ router.post(
   },
 );
 
+router.post(
+  '/carga-masiva',
+  upload.single('file'),
+  (req, res) => {
+    void cargaMasivaControlador.cargar(req, res);
+  },
+);
+
 export default router;

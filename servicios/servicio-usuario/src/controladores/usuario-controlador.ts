@@ -3,11 +3,11 @@ import type { NextFunction, Request, Response } from 'express';
 
 import baseDeDatos from '../config/base-de-datos';
 import type { CambiarRolUsuarioDto } from '../dtos/cambiar-rol-usuario.dto';
-import type { ConsultaUsuariosQuery } from '../dtos/consulta-usuarios.dto';
 import type { CrearUsuarioDto } from '../dtos/crear-usuario.dto';
 import { RolRepositorio } from '../repositorios/rol-repositorio';
 import { RolServicio } from '../servicios/rol-servicio';
 import { crearUsuarioServicio } from '../servicios/usuario-servicio';
+import { validarConsultaUsuarios } from '../utilidades/validar-consulta-usuarios';
 import { validarCrearUsuario } from '../utilidades/validar-crear-usuario';
 
 type UsuarioServicio = ReturnType<typeof crearUsuarioServicio>;
@@ -94,15 +94,7 @@ export const crearUsuarioControlador = (
    */
   async listar(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const query: ConsultaUsuariosQuery = {
-        page: req.query.page ? parseInt(req.query.page as string) : 1,
-        limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
-        rol: req.query.rol as string,
-        estaActivo: req.query.estaActivo === 'true' ? true : req.query.estaActivo === 'false' ? false : undefined,
-        search: req.query.search as string,
-        orderBy: req.query.orderBy as string,
-        orderDir: req.query.orderDir as 'asc' | 'desc',
-      };
+      const query = validarConsultaUsuarios(req.query);
       
       const resultado = await servicio.listar(query);
       res.status(200).json({ 

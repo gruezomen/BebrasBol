@@ -159,6 +159,55 @@ describe('UsuarioServicio', () => {
       );
     });
   });
+
+  describe('listar', () => {
+    it('deberia llamar al repositorio con los parametros recibidos y retornar la paginacion calculada', async () => {
+      const mockUsuarios = [{ id: '1' }, { id: '2' }];
+      const listar = jest.fn().mockResolvedValue({ usuarios: mockUsuarios, total: 2 });
+      const servicio = crearUsuarioServicio({
+        repositorio: { listar } as never,
+      });
+
+      const query = { page: 1, limit: 10, rol: 'estudiante' };
+      const resultado = await servicio.listar(query);
+
+      expect(listar).toHaveBeenCalledWith(query);
+      expect(resultado.usuarios).toEqual(mockUsuarios);
+      expect(resultado.paginacion).toEqual({
+        page: 1,
+        limit: 10,
+        total: 2,
+        totalPages: 1,
+      });
+    });
+
+    it('deberia usar valores por defecto para page y limit si no se proporcionan', async () => {
+      const listar = jest.fn().mockResolvedValue({ usuarios: [], total: 0 });
+      const servicio = crearUsuarioServicio({
+        repositorio: { listar } as never,
+      });
+
+      await servicio.listar({});
+
+      expect(listar).toHaveBeenCalledWith(
+        expect.objectContaining({
+          page: 1,
+          limit: 10,
+        }),
+      );
+    });
+
+    it('deberia calcular correctamente totalPages cuando el total no es multiplo de limit', async () => {
+      const listar = jest.fn().mockResolvedValue({ usuarios: [], total: 25 });
+      const servicio = crearUsuarioServicio({
+        repositorio: { listar } as never,
+      });
+
+      const resultado = await servicio.listar({ page: 1, limit: 10 });
+
+      expect(resultado.paginacion.totalPages).toBe(3); // 25 / 10 = 2.5 -> 3
+    });
+  });
 });
 
 // ─── Tests para PerfilServicio (obtener + actualizar / PATCH) ───────────

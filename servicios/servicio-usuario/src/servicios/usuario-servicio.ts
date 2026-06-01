@@ -90,7 +90,7 @@ export const crearUsuarioServicio = (
       paginacion: PaginacionResponse;
     }> {
       const { page = 1, limit = 10 } = query;
-      const { usuarios, total } = await repositorio.listar(query);
+      const { usuarios, total } = await repositorio.listar({ ...query, page, limit });
       
       return {
         usuarios,

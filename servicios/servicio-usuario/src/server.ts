@@ -8,7 +8,7 @@ const app = express();
 
 // 2. Le das permiso a tu frontend (puerto 3000) de conectarse
 app.use(cors({
-    origin: 'http://localhost:3000', // El dominio de tu frontend
+    origin: process.env.URL_CLIENTE ?? 'http://localhost:3000', // El dominio de tu frontend
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'], // Métodos permitidos
     credentials: true
 }));

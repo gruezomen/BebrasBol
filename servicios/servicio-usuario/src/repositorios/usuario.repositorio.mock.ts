@@ -1,4 +1,5 @@
 import { Usuario } from '../modelos/usuario';
+import { ErrorNegocio } from '../utilidades/errores';
 
 import { UsuarioRepositorio } from './usuario.repositorio';
 
@@ -25,11 +26,13 @@ export class UsuarioRepositorioMock implements UsuarioRepositorio {
   }
 
   async cambiarEstado(id: string, estaActivo: boolean): Promise<Usuario> {
-    const usuario = this.usuarios.find((u) => u.id === id);
+    const usuario = this.usuarios.find((usuarioEncontrado) => usuarioEncontrado.id === id);
     if (!usuario) {
-      throw new Error('Usuario con id ' + id + ' no encontrado');
+      throw new ErrorNegocio(`Usuario con id ${id} no encontrado`, 404);
     }
     usuario.estaActivo = estaActivo;
     return usuario;
   }
 }
+
+

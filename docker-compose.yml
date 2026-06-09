@@ -1,47 +1,56 @@
-version: '3.8'
-
 services:
-  # BASE DE DATOS
   postgres_db:
     image: postgres:15-alpine
-    container_name: bebras_db
+    container_name: bebras_postgres_db
     restart: always
     environment:
-      # Estos 3 los define: MODELO BD Y REPOS
-      POSTGRES_USER: dev_user           
-      POSTGRES_PASSWORD: dev_password   
-      POSTGRES_DB: bebras_bolivia       
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # SECCIÓN DE APLICACIÓN
-  auth-service:
+  servicio_usuario:
     build:
-      context: .
-      # Define la ruta: MODELO BD Y REPOS
-      dockerfile: servicios/servicio-autenticacion/Dockerfile 
-    container_name: auth_svc
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      context: ./servicios/servicio-usuario
+      dockerfile: Dockerfile
+    container_name: bebras_servicio_usuario
+    restart: always
     environment:
-      - NODE_ENV=development            # ESTÁNDARES DE CODIFICACIÓN
-      
-      # 1. Los datos (user/pass) vienen de: MODELO BD Y REPOS
-      # 2. La seguridad de la conexión viene de: DDOS, TLS, INYECCION
-      - DB_URL=postgres://dev_user:dev_password@postgres_db:5432/bebras_bolivia
-      
-      # CERTIFICADOS Y FIRMAS DIGITALES
-
+      NODE_ENV: production
+      USER_SERVICE_PORT: 4102
+      URL_CLIENTE: ${URL_CLIENTE:-http://localhost:3000}
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres_db:5432/${DB_NAME}?schema=bebras
+      SHADOW_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres_db:5432/${DB_NAME}?schema=bebras
+      RUN_DB_INTEGRATION_TESTS: "false"
     ports:
-      - "3001:3001"
+      - "4102:4102"
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
 
-# RECURSOS ADICIONALES
+  cliente:
+    build:
+      context: ./cliente
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4102/api/v1}
+    container_name: bebras_cliente
+    restart: always
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4102/api/v1}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - servicio_usuario
+
 volumes:
   postgres_data:
-
-# REDIS

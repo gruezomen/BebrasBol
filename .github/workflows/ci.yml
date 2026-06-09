@@ -1,4 +1,5 @@
-name: CI
+name: CI/CD
+
 on:
   push:
     branches: [main, develop]
@@ -6,28 +7,49 @@ on:
     branches: [main, develop]
 
 concurrency:
-  group: github.workflow-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   calidad:
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
+
       - name: Node.js setup
         uses: actions/setup-node@v4
         with:
           node-version: '22.22.2'
           cache: 'npm'
+
       - name: Instalar dependencias
         run: npm run install:all
+
       - name: Verificar formato
         run: npm run format:check
+
       - name: Analisis estatico
         run: npm run lint
+
       - name: Auditoria de seguridad
         run: npm audit --audit-level=high || true
+
       - name: Pruebas con cobertura
         run: npm test
+
       - name: Build
         run: npm run build
+
+  despliegue:
+    name: CD en servidor Linux local
+    needs: calidad
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    steps:
+      - name: Descargar codigo actualizado en el runner
+        uses: actions/checkout@v4
+
+      - name: Ejecutar script local de despliegue
+        run: |
+          ~/deploy.sh "${GITHUB_WORKSPACE}" "${{ secrets.DB_USER }}" "${{ secrets.DB_PASSWORD }}" "${{ secrets.DB_NAME }}"

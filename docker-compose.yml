@@ -28,7 +28,7 @@ services:
       USER_SERVICE_PORT: 4102
       URL_CLIENTE: ${URL_CLIENTE:-http://localhost:3000}
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres_db:5432/${DB_NAME}?schema=bebras
-      SHADOW_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres_db:5432/${DB_NAME}?schema=bebras
+      SHADOW_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres_db:5432/${DB_NAME}_shadow?schema=bebras
       RUN_DB_INTEGRATION_TESTS: "false"
     ports:
       - "4102:4102"
